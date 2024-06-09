@@ -38,7 +38,7 @@ class DBStorage:
         '''
         db_dict = {}
 
-        if cls != "":
+        if cls is not None and cls != '':
             objs = self.__session.query(models.classes[cls]).all()
             for obj in objs:
                 key = "{}.{}".format(obj.__class__.__name__, obj.id)
@@ -67,25 +67,6 @@ class DBStorage:
         '''
         self.__session.commit()
 
-    def get(self, cls, id):
-        '''
-            Retrieve one object
-        '''
-        obj_list = self.__session.query(eval(cls)).all()
-        for obj in obj_list:
-            if obj.id == str(id):
-                return obj
-        return None
-
-    def count(self, cls=None):
-        '''
-           Count the number of objects in storage
-        '''
-        count = 0
-        class_dict = self.all(cls)
-        count = len(class_dict)
-        return count
-
     def delete(self, obj=None):
         '''
             Delete from current database session
@@ -107,3 +88,32 @@ class DBStorage:
             Remove private session attribute
         '''
         self.__session.close()
+
+    def get(self, cls, id):
+        '''
+        gets an object
+        Args:
+            cls (str): class name
+            id (str): object ID
+        Returns:
+            an object based on class name and its ID
+        '''
+        obj_dict = models.storage.all(cls)
+        for k, v in obj_dict.items():
+            matchstring = cls + '.' + id
+            if k == matchstring:
+                return v
+
+        return None
+
+    def count(self, cls=None):
+        '''
+        counts number of objects of a class (if given)
+        Args:
+            cls (str): class name
+        Returns:
+            number of objects in class, if no class name given
+            return total number of objects in database
+        '''
+        obj_dict = models.storage.all(cls)
+        return len(obj_dict)

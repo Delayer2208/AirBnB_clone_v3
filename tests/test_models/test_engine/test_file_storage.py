@@ -129,27 +129,26 @@ class testFileStorage(unittest.TestCase):
         '''
         self.assertTrue(isinstance(storage, FileStorage))
 
-    def test_filestorage_get(self):
+    def test_get(self):
         '''
-            Testing Get method
+            Test if get method retrieves obj requested
         '''
-        filestor = FileStorage()
-        new = State()
-        new.name = "Alabama"
-        filestor.new(new)
-        new_id = new.id
-        filestor.save()
-        state = filestor.get("State", new_id)
-        self.assertEqual(state.name, "Alabama")
+        new_state = State(name="NewYork")
+        storage.new(new_state)
+        key = "State.{}".format(new_state.id)
+        result = storage.get("State", new_state.id)
+        self.assertTrue(result.id, new_state.id)
+        self.assertIsInstance(result, State)
 
-    def test_filestorage_count(self):
+    def test_count(self):
         '''
-            Testing Count method
+            Test if count method returns expected number of objects
         '''
-        filestor = FileStorage()
-        old_count = filestor.count("State")
-        new = State(name="Alabama")
-        filestor.new(new)
-        filestor.save()
-        new_count = filestor.count("State")
-        self.assertEqual(old_count + 1, new_count)
+        old_count = storage.count("State")
+        new_state1 = State(name="NewYork")
+        storage.new(new_state1)
+        new_state2 = State(name="Virginia")
+        storage.new(new_state2)
+        new_state3 = State(name="California")
+        storage.new(new_state3)
+        self.assertEqual(old_count + 3, storage.count("State"))

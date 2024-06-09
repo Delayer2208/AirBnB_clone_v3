@@ -1,29 +1,30 @@
 #!/usr/bin/python3
-""" returns json statuses for app_views routes  """
+"""index"""
 from api.v1.views import app_views
 from flask import jsonify
 from models import storage
+from models.user import User
+from models.place import Place
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
+
+classes = {"users": "User", "places": "Place", "states": "State",
+           "cities": "City", "amenities": "Amenity",
+           "reviews": "Review"}
 
 
-@app_views.route('/status', strict_slashes=False)
-def stat_return():
-    """ return json status: OK """
-    return jsonify({"status": "OK"})
+@app_views.route('/status', methods=['GET'])
+def status():
+    ''' routes to status page '''
+    return jsonify({'status': 'OK'})
 
 
-@app_views.route('/stats', methods=['GET'], strict_slashes=False)
-def stat_count():
-    """ endpoint that retrieves the # of each objects by type """
-    count_stats = {
-        'amenities': storage.count('Amenity'),
-        'cities': storage.count('City'),
-        'places': storage.count('Place'),
-        'reviews': storage.count('Review'),
-        'states': storage.count('State'),
-        'users': storage.count('User')
-    }
-    return jsonify(count_stats)
-
-
-if __name__ == "__main__":
-    pass
+@app_views.route('/stats', methods=['GET'])
+def count():
+    '''retrieves the number of each objects by type'''
+    count_dict = {}
+    for cls in classes:
+        count_dict[cls] = storage.count(classes[cls])
+    return jsonify(count_dict)
