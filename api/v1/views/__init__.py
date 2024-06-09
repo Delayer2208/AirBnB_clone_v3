@@ -1,10 +1,14 @@
 #!/usr/bin/python3
-"""create blueprint"""
+"""
+    Create and configure the Flask Blueprint for the API
+"""
 from flask import Blueprint
 
+# Initialize the Blueprint for the API views
 app_views = Blueprint('app_views', __name__, url_prefix='/api/v1')
 
-if app_views is not None:
+# Import all the views if the Blueprint is initialized
+if app_views:
     from api.v1.views.index import *
     from api.v1.views.states import *
     from api.v1.views.cities import *
