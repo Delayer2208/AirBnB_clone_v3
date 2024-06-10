@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""amenities"""
+"""amenities route"""
 from api.v1.views import app_views
 from flask import jsonify, abort, request
 from models import storage
@@ -10,14 +10,14 @@ import uuid
 
 @app_views.route('/amenities/', methods=['GET'])
 def list_amenities():
-    '''Retrieves a list of all Amenity objects'''
+    '''Retrieve list of all Amenities'''
     list_amenities = [obj.to_dict() for obj in storage.all("Amenity").values()]
     return jsonify(list_amenities)
 
 
 @app_views.route('/amenities/<amenity_id>', methods=['GET'])
 def get_amenity(amenity_id):
-    '''Retrieves an Amenity object'''
+    '''Retrieve an Amenity object'''
     all_amenities = storage.all("Amenity").values()
     amenity_obj = [obj.to_dict() for obj in all_amenities
                    if obj.id == amenity_id]
@@ -28,7 +28,7 @@ def get_amenity(amenity_id):
 
 @app_views.route('/amenities/<amenity_id>', methods=['DELETE'])
 def delete_amenity(amenity_id):
-    '''Deletes an Amenity object'''
+    '''Delete an Amenity object'''
     all_amenities = storage.all("Amenity").values()
     amenity_obj = [obj.to_dict() for obj in all_amenities
                    if obj.id == amenity_id]
@@ -44,7 +44,7 @@ def delete_amenity(amenity_id):
 
 @app_views.route('/amenities/', methods=['POST'])
 def create_amenity():
-    '''Creates an Amenity'''
+    '''Create an Amenity'''
     if not request.get_json():
         abort(400, 'Not a JSON')
     if 'name' not in request.get_json():
@@ -58,8 +58,8 @@ def create_amenity():
 
 
 @app_views.route('/amenities/<amenity_id>', methods=['PUT'])
-def updates_amenity(amenity_id):
-    '''Updates an Amenity object'''
+def update_amenity(amenity_id):
+    '''Update an Amenity object'''
     all_amenities = storage.all("Amenity").values()
     amenity_obj = [obj.to_dict() for obj in all_amenities
                    if obj.id == amenity_id]
